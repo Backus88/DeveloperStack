@@ -5,8 +5,27 @@ export type InsertQuestions = Omit<Questions, "id">
 
 
 export async function creatQuestion (question : InsertQuestions){
-    const questionCallback = await client.questions.create(
+     await client.questions.create(
         {data:question}
     );
-    return questionCallback;
+}
+
+export async function getQuestions (){
+    return await client.questions.findMany()
+}
+
+export async function getQuestion(questionId: number){
+    return await client.questions.findUnique({
+        where:{
+            id:questionId
+        },
+        include :{
+            answer: {
+                select:{
+                    answeredBy:true,
+                    answer:true
+                }
+            }
+        }
+    })
 }
